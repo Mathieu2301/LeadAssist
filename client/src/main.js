@@ -9,7 +9,7 @@ Vue.config.productionTip = false;
 
 Vue.use(Router);
 
-const socket = io('http://cloud1.usp-3.fr:2181/');
+const socket = io('https://cloud1.usp-3.fr:2180/');
 
 Vue.prototype.events = {
   onData: data => data,

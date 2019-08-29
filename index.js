@@ -27,7 +27,14 @@ server.listen(2181);
 console.log("listening on :2181");
 
 const crypto = require('crypto');
-const io = require('socket.io')(server);
+const fs = require('fs');
+// const io = require('socket.io')(server);
+const io = require('socket.io').listen(require('https').createServer({
+    key: fs.readFileSync('/home/main/config/SSL/private.key'),
+    cert: fs.readFileSync('/home/main/config/SSL/certificate.crt')
+}).listen(2180));
+console.log("listening on :2180");
+
 const games = {};
 
 io.on("connect", client => {
