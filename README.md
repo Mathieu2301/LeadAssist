@@ -30,7 +30,7 @@ ___
 ___
 ## Problems
 
- If the problem persists, please create an issue [here](https://github.com/Mathieu2301/LeadAssist/issues).
+ If you have any problem, please create an issue [here](https://github.com/Mathieu2301/LeadAssist/issues).
  
 ## Todos
 
