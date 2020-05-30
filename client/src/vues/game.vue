@@ -12,8 +12,6 @@
       </div>
       <div class="third">{{ game.infos.round.phase }}</div>
 
-      <div class="half text_left">Équipement : {{team_equip}}$</div>
-
       <template v-if="bomb_planted || bomb_defused"> <!-- Bombe plantée -->
         <img alt="Defuse kit" src="/assets/weapon-a/item_defuser.svg" v-if="team_haskit">
         <img alt="Bomb planted" src="/assets/weapon-a/weapon_c4.svg" v-if="bomb_planted">
@@ -31,35 +29,38 @@
 
     <div class="players">
 
-      <div class="player" v-for="(player, id) in game.players" :key="id" @click="select(id)">
+      <div
+        class="player"
+        v-for="(player, id) in game.players"
+        :key="id"
+        @click="select(id)"
+        :class="{
+          blind:   player.state.flashed > 200,
+          burning: player.state.burning > 200,
+          smoked:  player.state.smoked  > 200,
+        }"
+      >
 
-        <div class="third" :class="{
+        <div class="title text_center" :class="{
           red_text: player.activity == 'menu',
           yellow_text: player.activity == 'textinput'
         }">{{ player.name }}</div>
 
-        <div class="third text_right">{{ player.state.round_kills }} rkills</div>
-
-        <div class="third text_right">
-          {{ player.stats.kills }} / {{ player.stats.assists }} / {{ player.stats.deaths }}
-        </div>
-
-        <div class="bar quart green" :class="{
+        <div class="bar half green" :class="{
           red: player.state.health <= 20
         }"><div class="content" :style="{
           width: player.state.health + '%'
         }"> {{player.state.health}} HP</div></div>
 
-        <div class="bar quart" :class="{
+        <div class="half text_center">{{ player.state.money }}$</div>
+
+        <div class="bar line half" :class="{
           blue: player.state.helmet
         }"><div class="content" :style="{
           width: player.state.armor + '%'
-        }"> {{player.state.armor}} %</div></div>
+        }"></div></div>
 
-        <div class="quart text_center">M: {{ player.state.money }}$</div>
-        <div class="quart text_center">E: {{ player.state.equip_value }}$</div>
-
-        <div class="bar third white status"><div class="content" :style="{
+        <!-- <div class="bar third white status"><div class="content" :style="{
           width: player.state.flashed / 255 * 100 + '%'
         }"> Flashed</div></div>
 
@@ -69,7 +70,7 @@
 
         <div class="bar third grey status"><div class="content" :style="{
           width: player.state.smoked / 255 * 100 + '%'
-        }"> Smoked</div></div>
+        }"> Smoked</div></div> -->
 
         <div class="weapons">
           <div class="weapon" v-for="(w, id) in player.weapons" :key="id">
@@ -205,7 +206,9 @@ export default {
 
 .players {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: center;
   margin: 4px;
 }
 
@@ -213,23 +216,45 @@ export default {
   display: flex;
   flex-wrap: wrap;
   text-align: left;
+  text-align: left;
+  width: 100%;
+  max-width: 500px;
   padding: 5px;
-  border-bottom: solid 1px var(--color7);
+  border-bottom: solid 3px var(--color8);
+  background-color: #455f73;
 }
 
-.player > .half {
-  width: 50%;
+.player.burning {
+  background-color: #ffa500;
+  color: var(--color0);
+}
+
+.player.smoked {
+  background-color: #aaaaaa;
+    color: var(--color1);
+}
+
+.player.blind {
+  background-color: var(--color1);
+  color: var(--color0);
+}
+
+.player > .title {
+  width: 100%;
+  font-size: 20px;
+  padding-bottom: 3px;
 }
 
 .weapons {
   display: flex;
-  flex-flow: row;
+  flex-flow: wrap;
   width: 100%;
   justify-content: space-around;
+  margin-top: 5px;
 }
 
 .weapon img {
-  height: 25px;
+  height: 30px;
 }
 
 .weapon .bullets {
@@ -237,28 +262,16 @@ export default {
   line-height: 8px;
 }
 
-.icon_text {
-  display: grid;
-  grid: auto / auto auto;
-}
-
-.icon_text > .icon {
-  margin-left: auto;
-}
-
-.icon_text > .text {
-  line-height: 39px;
-  text-align: center;
-  font-size: 20px;
-}
-
 .bar {
   background-color: #455f73;
   margin: 2px 0;
 }
 
+.bar.line { height: 2px; margin: 0; }
+
 .bar > .content {
   background-color: var(--color7);
+  height: 100%;
   text-align: center;
   white-space: nowrap;
 }
@@ -275,11 +288,9 @@ export default {
 .full  { width: 100% }
 .half  { width: 50% }
 .third { width: calc(100% / 3); }
-.quart { width: 25% }
 
 .green_text { color: var(--color9) }
-.red_text { color: var(--red) }
 .yellow_text { color: #d3c71e }
-
+.red_text { color: var(--red) }
 
 </style>
